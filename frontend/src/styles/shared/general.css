@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root{
+  --accent-color: #6B7280;
+  --base-color: #eeeeee;
+  --brand-color: #9aa0ad;
+  --text-color: #111827;
+  --secondary-text-color: #2e303a;
+  --input-color: #babcc0;
+  --error-color: #EF4444;
+  --surface-color: #fff;
+  --base-transparent-90: rgba(247, 247, 247, 0.9);
+  --base-transparent-100: rgba(247, 247, 247, 1);
+}
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html{
+  font-family: Poppins, Segoe UI, sans-serif;
+  font-size: 12pt;
+  color: var(--text-color);
+}
+body {
+  min-height: 100vh;
+}
+a{
+  text-decoration: none;
+  color: var(--accent-color);
+}
