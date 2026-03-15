@@ -34,15 +34,24 @@ Frontend
 ## Installation
 
 git clone https://github.com/lieutcoplan/secure-notes-api.git
+
 cd secure-notes-api
+
 cd backend
+
 npm install
 
+
 Setting the environment variables(.env):
+
 DATABASE_URL=postgresql://user:password@localhost:5432/notesdb
+
 NODE_ENV=development_or_production
+
 PORT=your_port
+
 SESSION_SECRET=your_secret
+
 
 npx prisma migrate dev
 
@@ -51,16 +60,23 @@ npm run dev
 ## API Endpoints
 
 Authentication:
+
 POST /api/register
+
 POST /api/login
+
 POST /api/logout
 
 Notes:
+
 GET /api/notes
+
 POST /api/notes
+
 DELETE /api/notes/:id
 
 Admin:
+
 PATCH /api/admin/users/:id/role
 
 ## Security Features
