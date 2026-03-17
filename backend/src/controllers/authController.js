@@ -58,18 +58,24 @@ const login = async (req, res) => {
     return res.status(401).json({error: "Invalid email or password"});
   }
 
-  req.session.userId = user.id;
-  req.session.role = user.role;
+  req.session.regenerate((err) => {
+    if (err) {
+      return next(err)
+    }
+  
+    req.session.userId = user.id;
+    req.session.role = user.role;
 
-  res.status(200).json({
-    status: "success",
-    data: {
-      user: {
-        id: user.id,
-        email: email,
+    res.status(200).json({
+      status: "success",
+      data: {
+        user: {
+          id: user.id,
+          email: email,
+        },
       },
-    },
-  });
+    });
+  })
 };
 
 // Logout

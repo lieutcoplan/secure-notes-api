@@ -7,6 +7,7 @@ import requireAuth from "./middleware/authMiddleware.js";
 import errorMiddleware from "./middleware/errorMiddleware.js";
 import requireRole from "./middleware/roleMiddleware.js";
 import path from "path";
+import { ensureCsrfToken, verifyCsrfToken, verifyOrigin } from "./middleware/csrf.js";
 
 const app = express();
 
@@ -22,14 +23,10 @@ app.use("/scripts", express.static(path.join(__dirname,
   "../../frontend/src/scripts"))
 );
 
-// Body parsing middlewares
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-
 // Session cookie
 if (process.env.NODE_ENV === "production") {
   app.set("trust proxy", 1);
-}
+};
 
 app.use(
   session({
@@ -46,7 +43,16 @@ app.use(
   })
 );
 
+// Body parsing middlewares
+app.use(express.json());
+app.use(ensureCsrfToken);
+app.use("/api",verifyOrigin, verifyCsrfToken);
+
 // API Routes
+app.get("/api/csrf-token", (req, res) => {
+  res.json({csrfToken: req.session.csrfToken})
+});
+
 app.get("/api/me", requireAuth, async (req, res) => {
   // req.session.userId available
   res.json({ userId: req.session.userId, role: req.session.role });
@@ -61,19 +67,19 @@ app.use("/api/admin", requireAuth, requireRole("ADMIN"), adminRoutes);
 // Frontend Routes
 app.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname, "../../frontend/src/pages/auth/login.html"))
-})
+});
 
 app.get("/", (req, res) => {
   res.redirect("/login")
-})
+});
 
 app.get("/register", (req, res) => {
   res.sendFile(path.join(__dirname, "../../frontend/src/pages/auth/register.html"))
-})
+});
 
 app.get("/notes", requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, "../../frontend/src/pages/notes/notes.html"))
-})
+});
 
 // Error middleware
 app.use(errorMiddleware);
