@@ -75,6 +75,8 @@ POST /api/notes
 
 DELETE /api/notes/:id
 
+PUT /api/notes/:id
+
 Admin:
 
 PATCH /api/admin/users/:id/role
@@ -97,7 +99,6 @@ PATCH /api/admin/users/:id/role
 
 ## Future Improvements
 
-- note editing
 - CSRF protection
 - rate limiting
 - multi-language support
