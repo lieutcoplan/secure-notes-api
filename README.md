@@ -16,6 +16,7 @@ I also use this project as a learning platform for web security and bug bounty p
 - Delete notes
 - Access control (users can only access their own notes)
 - Admin role management
+- CSRF Protection
 
 ## Tech Stack
 
@@ -99,7 +100,6 @@ PATCH /api/admin/users/:id/role
 
 ## Future Improvements
 
-- CSRF protection
 - rate limiting
 - multi-language support
 - better frontend UI
