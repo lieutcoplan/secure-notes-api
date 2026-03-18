@@ -13,7 +13,6 @@ async function initCsrfToken() {
 
   const data = await response.json();
   csrfToken = data.csrfToken;
-  console.log(csrfToken)
 };
 
 // Fetch

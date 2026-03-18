@@ -5,4 +5,11 @@ const requireAuth = (req, res, next) => {
   next();
 }
 
-export default requireAuth;
+const redirectIfAuthenticated = (req, res, next) => {
+  if (req.session && req.session.userId) {
+    return res.redirect('/notes')
+  }
+  next();
+}
+
+export {requireAuth, redirectIfAuthenticated};

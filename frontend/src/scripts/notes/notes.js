@@ -9,6 +9,10 @@ const noteContentInput = document.querySelector('#noteContent');
 const notesContainer = document.querySelector('#notesContainer')
 const dialogTitle = document.querySelector('#dialogTitle')
 
+function formatDateShort(dateString) {
+  return new Date(dateString).toLocaleDateString('fr-FR');
+}
+
 function openNoteDialog() {
   editingNoteId = null
 
@@ -62,6 +66,10 @@ async function renderNotes() {
       noteCard.className = 'note-card'
       noteCard.dataset.id = note.id
 
+      const date = document.createElement('p')
+      date.className = 'note-date'
+      date.textContent = formatDateShort(note.updatedAt)
+
       const title = document.createElement('h3')
       title.className = 'note-title'
       title.textContent = note.title
@@ -85,7 +93,7 @@ async function renderNotes() {
         </button>
       `
 
-      noteCard.append(title, content, actions)
+      noteCard.append(date, title, content, actions)
       notesContainer.append(noteCard)
     }
   } catch (error) {

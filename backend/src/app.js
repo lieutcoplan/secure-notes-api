@@ -3,7 +3,7 @@ import authRoutes from "./routes/authRoutes.js"
 import notesRoutes from "./routes/notesRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js"
 import session from "express-session"
-import requireAuth from "./middleware/authMiddleware.js";
+import {requireAuth, redirectIfAuthenticated} from "./middleware/authMiddleware.js";
 import errorMiddleware from "./middleware/errorMiddleware.js";
 import requireRole from "./middleware/roleMiddleware.js";
 import path from "path";
@@ -65,7 +65,7 @@ app.use("/api/notes", requireAuth, notesRoutes);
 app.use("/api/admin", requireAuth, requireRole("ADMIN"), adminRoutes);
 
 // Frontend Routes
-app.get("/login", (req, res) => {
+app.get("/login", redirectIfAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, "../../frontend/src/pages/auth/login.html"))
 });
 
