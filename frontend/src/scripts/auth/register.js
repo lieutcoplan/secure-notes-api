@@ -1,4 +1,4 @@
-import {apiFetch} from "../shared/api.js"
+import {apiFetch, initCsrfToken} from "../shared/api.js"
 
 const form = document.querySelector('#register-form')
 const nameInput = document.querySelector('#name-input')
@@ -6,6 +6,8 @@ const emailInput = document.querySelector('#email-input')
 const passwordInput = document.querySelector('#password-input')
 const repeatPasswordInput = document.querySelector('#repeat-password-input')
 const errorMessage = document.querySelector('#error-message')
+
+await initCsrfToken();
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault()

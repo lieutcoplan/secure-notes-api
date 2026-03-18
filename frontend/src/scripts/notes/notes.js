@@ -162,6 +162,19 @@ function applyStoredTheme() {
   }
 }
 
+async function logout() {
+  const {response, data} = await apiFetch("/api/auth/logout", {
+    method: 'POST'
+  })
+
+  if (!response.ok) {
+    console.log(data?.error || 'Logout failed')
+    return
+  }
+
+  window.location.href = '/login'
+}
+
 initPage();
 
 document.querySelector('#js-add-note-btn').addEventListener('click', openNoteDialog)
@@ -173,6 +186,8 @@ document.querySelector('#js-close-btn').addEventListener('click', closeNoteDialo
 document.querySelector('#noteForm').addEventListener('submit', saveNote)
 
 document.querySelector('#themeToggleBtn').addEventListener('click', toggleTheme)
+
+document.querySelector('#js-logout-btn').addEventListener('click', logout)
 
 document.querySelector('#notesContainer').addEventListener('click', async (event) => {
   if (event.target.closest('.add-note-btn')) {
