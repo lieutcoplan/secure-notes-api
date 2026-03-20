@@ -21,6 +21,7 @@ form.addEventListener('submit', async(e) => {
 
   errorMessage.innerText = ''
 
+  // Login Request
   const {response, data} = await apiFetch('/api/auth/login', {
     method: 'POST',
     body: JSON.stringify({
@@ -30,19 +31,14 @@ form.addEventListener('submit', async(e) => {
   })
 
   if (!response.ok) {
-    let message = data?.error || 'Login failed'
-
-    if (data?.retryAfter) {
-      message += ` — Try again in ${data.retryAfter} seconds`
-    };
-
-    errorMessage.innerText = message;
+    errorMessage.innerText = data?.error || 'Invalid email or password'
     return
   }
 
   window.location.href = '/notes'
 })
 
+// Errors
 function getLoginFormErrors(email, password) {
   let errors = []
 
@@ -63,6 +59,7 @@ function clearErrors() {
   })
 }
 
+// Input error visual
 const allInputs = form.querySelectorAll('input')
 
 allInputs.forEach(input => {

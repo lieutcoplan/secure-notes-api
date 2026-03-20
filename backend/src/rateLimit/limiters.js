@@ -21,12 +21,23 @@ const globalLimiter = new RateLimiterRedis({
   inMemoryBlockDuration: 60,
 });
 
-const loginIpLimiter = new RateLimiterRedis({
+const loginFailByIp = new RateLimiterRedis({
   storeClient: redisClient,
-  keyPrefix: "rl:login:ip",
-  points: 5, // 5 tries
-  duration: 60 * 5, // reset every 5 minutes
+  keyPrefix: "rl:login_fail:ip",
+  points: 10, // 10 tries
+  duration: 60 * 15, // reset every 5 minutes
   blockDuration: 60 * 10, // block 10 minutes
+  useRedisPackage: true,
+  rejectIfRedisNotReady: true,
+  insuranceLimiter,
+});
+
+const loginFailByEmailAndIp = new RateLimiterRedis({
+  storeClient: redisClient,
+  keyPrefix: "rl:login_fail:email_ip",
+  points: 5, // 5 tries
+  duration: 60 * 60 * 3, // 3h
+  blockDuration: 60 * 10, // 10 mins
   useRedisPackage: true,
   rejectIfRedisNotReady: true,
   insuranceLimiter,
@@ -43,4 +54,4 @@ const notesWriteLimiter = new RateLimiterRedis({
   insuranceLimiter,
 });
 
-export {globalLimiter, loginIpLimiter, notesWriteLimiter}
+export {globalLimiter, loginFailByIp, loginFailByEmailAndIp, notesWriteLimiter}
