@@ -8,6 +8,8 @@ import errorMiddleware from "./middleware/errorMiddleware.js";
 import requireRole from "./middleware/roleMiddleware.js";
 import path from "path";
 import { ensureCsrfToken, verifyCsrfToken, verifyOrigin } from "./middleware/csrf.js";
+import { RedisStore } from "connect-redis";
+import { redisClient } from "./config/redis.js"
 
 const app = express();
 
@@ -23,13 +25,21 @@ app.use("/scripts", express.static(path.join(__dirname,
   "../../frontend/src/scripts"))
 );
 
-// Session cookie
+
 if (process.env.NODE_ENV === "production") {
   app.set("trust proxy", 1);
 };
 
+// Redis store setup
+const redisStore = new RedisStore({
+  client: redisClient,
+  prefix: "notesapp:"
+});
+
+// Session cookie
 app.use(
   session({
+    store: redisStore,
     name: "sid",
     secret: process.env.SESSION_SECRET,
     resave: false,

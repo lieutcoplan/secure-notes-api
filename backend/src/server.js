@@ -2,9 +2,11 @@ import app from './app.js'
 import {config} from "dotenv"
 import {connectDB, disconnectDB} from "./config/db.js"
 import { disconnect } from 'node:cluster';
+import { connectRedis } from './config/redis.js';
 
 config();
 connectDB();
+connectRedis();
 
 const PORT = process.env.PORT || 3000; 
 app.listen(PORT, () => {
