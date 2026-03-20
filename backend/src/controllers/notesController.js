@@ -1,6 +1,6 @@
 import {prisma} from '../config/db.js'; 
 
-const createNote = async (req, res, next) => {
+async function createNote(req, res, next) {
   try {
     const {title, content} = req.body
 
@@ -29,7 +29,7 @@ const createNote = async (req, res, next) => {
   }
 }
 
-const listNote = async (req, res, next) => {
+async function listNote(req, res, next) {
   try {
     const userId = req.session.userId;
 
@@ -48,7 +48,7 @@ const listNote = async (req, res, next) => {
   }
 }
 
-const getNote = async (req, res, next) => {
+async function getNote(req, res, next) {
   try {
     const noteId = Number(req.params.id);
 
@@ -74,7 +74,7 @@ const getNote = async (req, res, next) => {
   }
 }
 
-const modifyNote = async (req, res, next) => {
+async function modifyNote(req, res, next) {
   try {
     const noteId = Number(req.params.id);
 
@@ -112,7 +112,7 @@ const modifyNote = async (req, res, next) => {
   }
 }
 
-const deleteNote = async (req, res, next) => {
+async function deleteNote(req, res, next) {
   try {
     const noteId = Number(req.params.id);
 
@@ -131,7 +131,7 @@ const deleteNote = async (req, res, next) => {
     if (deletedNote.count === 0) {
       return res.status(404).json({error: "Note not found"})
     }
-    res.json({message: "Note deleted successfully"})
+    res.status(204).send();
   } catch (err) {
     next(err)
   }

@@ -30,7 +30,13 @@ form.addEventListener('submit', async(e) => {
   })
 
   if (!response.ok) {
-    errorMessage.innerText = data?.error || 'Login failed'
+    let message = data?.error || 'Login failed'
+
+    if (data?.retryAfter) {
+      message += ` — Try again in ${data.retryAfter} seconds`
+    };
+
+    errorMessage.innerText = message;
     return
   }
 

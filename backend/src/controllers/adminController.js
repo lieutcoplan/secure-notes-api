@@ -1,7 +1,7 @@
 import {prisma} from '../config/db.js';
 import { Role } from "@prisma/client";
 
-const getUsers = async (req, res, next) => {
+async function getUsers(req, res, next) {
   try {
     const users = await prisma.user.findMany({
       select: { id: true, email: true, role: true, name: true },
@@ -15,7 +15,7 @@ const getUsers = async (req, res, next) => {
   }
 }
 
-const changeUserRole = async (req, res, next) => {
+async function changeUserRole (req, res, next) {
   try {
     const userId = req.params.id;
     const {role} = req.body;

@@ -1,4 +1,4 @@
-const errorMiddleware = async (err, req, res, next) => {
+export async function errorMiddleware(err, req, res, next) {
   
   console.error(err);
 
@@ -13,4 +13,3 @@ const errorMiddleware = async (err, req, res, next) => {
     error: "Internal server error"
   });
 }
-export default errorMiddleware;

@@ -4,12 +4,14 @@ import notesRoutes from "./routes/notesRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js"
 import session from "express-session"
 import {requireAuth, redirectIfAuthenticated} from "./middleware/authMiddleware.js";
-import errorMiddleware from "./middleware/errorMiddleware.js";
-import requireRole from "./middleware/roleMiddleware.js";
+import {errorMiddleware} from "./middleware/errorMiddleware.js";
+import {requireRole} from "./middleware/roleMiddleware.js";
 import path from "path";
-import { ensureCsrfToken, verifyCsrfToken, verifyOrigin } from "./middleware/csrf.js";
+import { ensureCsrfToken, verifyCsrfToken, verifyOrigin } from "./middleware/csrfMiddleware.js";
 import { RedisStore } from "connect-redis";
 import { redisClient } from "./config/redis.js"
+import { rateLimitBy } from "./middleware/rateLimitMiddleware.js"
+import { globalLimiter } from "./rateLimit/limiters.js"
 
 const app = express();
 
@@ -57,6 +59,7 @@ app.use(
 app.use(express.json());
 app.use(ensureCsrfToken);
 app.use("/api",verifyOrigin, verifyCsrfToken);
+app.use(rateLimitBy(globalLimiter, (req) => req.ip))
 
 // API Routes
 app.get("/api/csrf-token", (req, res) => {

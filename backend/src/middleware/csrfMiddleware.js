@@ -1,10 +1,11 @@
 import crypto from "node:crypto"
 
+// Generate CSRF Token
 function generateCsrfToken() {
   return crypto.randomBytes(32).toString("hex")
 }
 
-export function ensureCsrfToken(req, res, next) {
+function ensureCsrfToken(req, res, next) {
   if (!req.session) {
     return res.status(500).json({error : "Session not initialized"})
   }
@@ -16,7 +17,8 @@ export function ensureCsrfToken(req, res, next) {
   next();
 }
 
-export function verifyCsrfToken(req, res, next) {
+// Verify CSRF Token
+function verifyCsrfToken(req, res, next) {
   const protectedMethods = ["POST", "PUT", "PATCH", "DELETE"]
 
   if (!protectedMethods.includes(req.method)) {
@@ -37,7 +39,8 @@ export function verifyCsrfToken(req, res, next) {
   return next()
 }
 
-export function verifyOrigin(req, res, next) {
+// Verify origin of request
+function verifyOrigin(req, res, next) {
   const protectedMethods = ["POST", "PUT", "PATCH", "DELETE"]
 
   if (!protectedMethods.includes(req.method)) {
@@ -53,3 +56,5 @@ export function verifyOrigin(req, res, next) {
 
   return next();
 }
+
+export {ensureCsrfToken, verifyCsrfToken, verifyOrigin}

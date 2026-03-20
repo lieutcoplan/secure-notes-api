@@ -2,7 +2,7 @@ import {prisma} from '../config/db.js';
 import bcrypt from "bcryptjs";
 
 // Register
-const register = async (req, res) => {
+async function register(req, res) {
   const {name, email, password} = req.body;
   
   // Check if user already exists
@@ -39,7 +39,7 @@ const register = async (req, res) => {
 };
 
 // Login
-const login = async (req, res) => {
+async function login(req, res) {
   const {email, password} = req.body;
 
   // Check if user email exists in the table
@@ -79,7 +79,7 @@ const login = async (req, res) => {
 };
 
 // Logout
-const destroySession = (req) => {
+function destroySession(req) {
   return new Promise((resolve, reject) => {
     req.session.destroy((err) => {
       if (err) return reject(err);
@@ -88,7 +88,7 @@ const destroySession = (req) => {
   });
 };
 
-const logout = async (req, res, next) => {
+async function logout(req, res, next) {
   try {
     await destroySession(req);
 

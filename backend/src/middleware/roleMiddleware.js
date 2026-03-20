@@ -1,4 +1,4 @@
-const requireRole = (...allowedRoles) => {
+function requireRole(...allowedRoles) {
   return (req, res, next) => {
     const role = req.session?.role;
     if (!role) return res.status(401).json({error: "Unauthorized"});
@@ -10,4 +10,4 @@ const requireRole = (...allowedRoles) => {
   };
 };
 
-export default requireRole
+export {requireRole}
