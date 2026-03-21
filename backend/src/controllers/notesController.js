@@ -2,12 +2,30 @@ import {prisma} from '../config/db.js';
 
 async function createNote(req, res, next) {
   try {
-    const {title, content} = req.body
+    const {title, content} = req.body;
 
+    // Filters
     if (!title || !content) {
       return res.status(400).json({error:"Missing fields"})
-    }
+    };
 
+    if (title.length > 100) {
+      return res.status(400).json({error: "Title too long"})
+    };
+
+    if (content.length > 5000) {
+      return res.status(400).json({error: "Content too long"})
+    };
+
+    if (typeof title !== "string") {
+      return res.status(400).json({error: "Invalid title"})
+    };
+
+    if (typeof content !== "string") {
+      return res.status(400).json({error: "Invalid content"})
+    };
+
+    // Note creation
     const note = await prisma.note.create({
       data: {
         title,
@@ -54,7 +72,7 @@ async function getNote(req, res, next) {
 
     if (!Number.isInteger(noteId) || noteId <= 0) {
       return res.status(400).json({error: "Invalid note id"})
-    }
+    };
 
     const userId = req.session.userId;
 
@@ -80,13 +98,29 @@ async function modifyNote(req, res, next) {
 
     if (!Number.isInteger(noteId) || noteId <= 0) {
       return res.status(400).json({error: "Invalid note id"})
-    }
+    };
 
     const userId = req.session.userId;
     const {title, content} = req.body;
 
     if (!title || !content) {
       return res.status(400).json({error:"Missing fields"})
+    };
+
+    if (title.length > 100) {
+      return res.status(400).json({error: "Title too long"})
+    };
+
+    if (content.length > 5000) {
+      return res.status(400).json({error: "Content too long"})
+    };
+
+    if (typeof title !== "string") {
+      return res.status(400).json({error: "Invalid title"})
+    };
+
+    if (typeof content !== "string") {
+      return res.status(400).json({error: "Invalid content"})
     };
     
     const updatedNote = await prisma.note.updateMany({

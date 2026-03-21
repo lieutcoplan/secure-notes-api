@@ -12,6 +12,7 @@ import { RedisStore } from "connect-redis";
 import { redisClient } from "./config/redis.js"
 import { rateLimitBy } from "./middleware/rateLimitMiddleware.js"
 import { globalLimiter } from "./rateLimit/limiters.js"
+import helmet from "helmet";
 
 const app = express();
 
@@ -56,7 +57,9 @@ app.use(
 );
 
 // Body parsing middlewares
-app.use(express.json());
+app.disable("x-powered-by");
+app.use(helmet());
+app.use(express.json({limit: "20kb"}));
 app.use(ensureCsrfToken);
 app.use("/api",verifyOrigin, verifyCsrfToken);
 app.use(rateLimitBy(globalLimiter, (req) => req.ip))
@@ -71,7 +74,7 @@ app.get("/api/me", requireAuth, async (req, res) => {
   res.json({ userId: req.session.userId, role: req.session.role });
 });
 
-app.use("/api/auth", authRoutes);
+app.use("/api/auth",express.json({limit: '2kb'}), authRoutes);
 
 app.use("/api/notes", requireAuth, notesRoutes);
 

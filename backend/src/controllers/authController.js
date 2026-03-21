@@ -46,6 +46,10 @@ async function login(req, res, next) {
   const emailIpKey = `${email}_${ip}`;
   const password = req.body.password;
 
+  if (!email || !password) {
+    res.status(400).json({error: "Missing email or password"})
+  }
+
   // Rate Limiting
   const [ipState, emailIpState] = await Promise.all([
     loginFailByIp.get(ip),
