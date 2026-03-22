@@ -13,6 +13,7 @@ import { redisClient } from "./config/redis.js"
 import { rateLimitBy } from "./middleware/rateLimitMiddleware.js"
 import { globalLimiter } from "./rateLimit/limiters.js"
 import helmet from "helmet";
+import {httpLogger} from "./config/logger.js"
 
 const app = express();
 
@@ -57,6 +58,7 @@ app.use(
 );
 
 // Body parsing middlewares
+app.use(httpLogger)
 app.disable("x-powered-by");
 app.use(helmet());
 app.use(express.json({limit: "20kb"}));
@@ -89,7 +91,7 @@ app.get("/", (req, res) => {
   res.redirect("/login")
 });
 
-app.get("/register", (req, res) => {
+app.get("/register", redirectIfAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, "../../frontend/src/pages/auth/register.html"))
 });
 

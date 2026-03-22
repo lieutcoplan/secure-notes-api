@@ -37,6 +37,12 @@ async function createNote(req, res, next) {
         }
       }
     });
+
+    req.log.info({
+      userId: req.session.userId,
+      action:"create_note",
+      noteId: note.id
+    })
   
     res.status(201).json({
       status: "success",
@@ -60,6 +66,13 @@ async function listNote(req, res, next) {
       },
       take: 10
     });
+
+    // Logger
+    req.log.info({
+      userId: req.session.userId,
+      action:"list_note",
+    })
+
     res.json(notes)
   } catch (err) {
     next(err)
@@ -139,6 +152,13 @@ async function modifyNote(req, res, next) {
       return res.status(404).json({error : "Note not found"})
     }
 
+    // Logger
+    req.log.info({
+      userId: req.session.userId,
+      action:"modify_note",
+      noteId
+    })
+
     res.json({message: "Note updated successfully"})
     
   } catch (err) {
@@ -165,6 +185,14 @@ async function deleteNote(req, res, next) {
     if (deletedNote.count === 0) {
       return res.status(404).json({error: "Note not found"})
     }
+
+    // Logger
+    req.log.info({
+      userId: req.session.userId,
+      action:"delete_note",
+      noteId
+    })
+
     res.status(204).send();
   } catch (err) {
     next(err)

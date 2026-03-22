@@ -5,6 +5,18 @@ import {loginFailByIp, loginFailByEmailAndIp} from '../rateLimit/limiters.js'
 // Register
 async function register(req, res) {
   const {name, email, password} = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({error: "Missing email or password"})
+  }
+
+  if (password.length < 8) {
+    return res.status(400).json({error: "Password must have at least 8 characters"})
+  }
+
+  if (password.length > 64) {
+    return res.status(400).json({error: "Password must have no more than 64 characters"})
+  }
   
   // Check if user already exists
   const userExists = await prisma.user.findUnique({
@@ -27,6 +39,12 @@ async function register(req, res) {
     },
   });
 
+  // Logger
+  req.log.info({
+      userId: user.id,
+      action:"register",
+  });
+
   res.status(201).json({
     status: "success",
     data: {
@@ -41,6 +59,10 @@ async function register(req, res) {
 
 // Login
 async function login(req, res, next) {
+  if (req.session.userId) {
+    return res.status(200).json({message: "Already authenticated"})
+  }
+
   const email = String(req.body.email || '').toLowerCase().trim();
   const ip = req.ip;
   const emailIpKey = `${email}_${ip}`;
@@ -67,6 +89,13 @@ async function login(req, res, next) {
     );
     const retryAfter = Math.max(1, Math.ceil(msBeforeNext / 1000));
     res.set("Retry-After", String(retryAfter));
+
+    req.log.warn({ip: req.ip,
+      email,
+      route: req.originalUrl,
+      retryAfter
+    }, "Rate limit exceeded")
+
     return res.status(429).json({error : "Too many login attemps"})
   };
 
@@ -91,11 +120,16 @@ async function login(req, res, next) {
         loginFailByIp.consume(ip),
         loginFailByEmailAndIp.consume(emailIpKey),
     ]);
+
+    req.log.info({
+        userId: user.id,
+        ip: req.ip,
+    }, "Login fail");
+    
     return res.status(401).json({error: "Invalid email or password"});
   }
 
   // Success
-
   await Promise.all([
     loginFailByIp.delete(ip),
     loginFailByEmailAndIp.delete(emailIpKey),
@@ -108,6 +142,12 @@ async function login(req, res, next) {
   
     req.session.userId = user.id;
     req.session.role = user.role;
+
+    // Logger
+    req.log.info({
+        userId: user.id,
+        action:"login",
+    });
 
     res.status(200).json({
       status: "success",
