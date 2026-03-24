@@ -4,27 +4,6 @@ async function createNote(req, res, next) {
   try {
     const {title, content} = req.body;
 
-    // Filters
-    if (!title || !content) {
-      return res.status(400).json({error:"Missing fields"})
-    };
-
-    if (title.length > 100) {
-      return res.status(400).json({error: "Title too long"})
-    };
-
-    if (content.length > 5000) {
-      return res.status(400).json({error: "Content too long"})
-    };
-
-    if (typeof title !== "string") {
-      return res.status(400).json({error: "Invalid title"})
-    };
-
-    if (typeof content !== "string") {
-      return res.status(400).json({error: "Invalid content"})
-    };
-
     // Note creation
     const note = await prisma.note.create({
       data: {

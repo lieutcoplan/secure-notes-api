@@ -8,7 +8,7 @@ connectDB();
 connectRedis();
 
 const PORT = process.env.PORT || 3000; 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Running on Port ${PORT}`)
 });
 
