@@ -10,22 +10,32 @@ I also use this project as a learning platform for web security and bug bounty p
 
 - User registration
 - User authentication with sessions
+- Session storage with Redis database
+- CSRF Protection
 - Secure password hashing
-- Create notes
-- Read notes
-- Delete notes
+- Create/Read/Update/Delete notes
 - Access control (users can only access their own notes)
 - Admin role management
-- CSRF Protection
+- Rate limiter
+- Logs
+- Input validation with zod
+- Secured headers with helmet
 
 ## Tech Stack
 
 Backend
 - Node.js
 - Express
+- Express-session
 - Prisma ORM
 - PostgreSQL
-- express-session
+- Redis
+- Connect-redis
+- Rate-limiter-flexible
+- Pino
+- Pino-http
+- PostgreSQL
+- Helmet
 
 Frontend
 - HTML
@@ -87,8 +97,10 @@ PATCH /api/admin/users/:id/role
 - Password hashing using bcrypt
 - Session-based authentication
 - HTTPOnly cookies
+- Rate Limiter against some type of DoS attack
+- CSRF Protection
 - Access control checks on every note
-- Input validation on backend
+- Input validation on backend with zod schema
 
 ## Learning Goals
 
@@ -100,7 +112,11 @@ PATCH /api/admin/users/:id/role
 
 ## Future Improvements
 
-- rate limiting
 - multi-language support
 - better frontend UI
 - search functionality
+- email confirmation to register
+- password forgotten functionality
+- 2FA Authentication
+- frontend with React
+- typescript
